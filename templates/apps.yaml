@@ -1,0 +1,6 @@
+{{- range $key, $val := .Values.apps}}
+{{- template "app.templatename" $val}}
+---
+ {{- template "db.service" $val}}
+---
+{{- end}}

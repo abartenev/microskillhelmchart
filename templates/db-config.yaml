@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.appName }}-config
+  namespace: {{ .Values.namespace}}
+data:
+  db-url: users
+  spring-data-url: jdbc:postgresql://postgres-service:5432/users

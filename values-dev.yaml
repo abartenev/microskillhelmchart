@@ -1,0 +1,12 @@
+namespace: &namespace skill-dev
+nodeport: &nodeport 30105
+
+apps:
+  postgresdbapp:
+    metadata:
+      namespace: *namespace
+      nodePort: *nodeport
+  microskillapp:
+    metadata:
+      namespace: *namespace
+

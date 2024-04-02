@@ -1,0 +1,75 @@
+namespace: &namespace default
+nodeport: &nodeport 30001
+
+appName: microskill
+apps:
+  postgresdbapp:
+    kind: StatefulSet
+    replicas: 1
+    appName: postgres
+    containers:
+      name: postgresdb
+      image: alexbartenev/postgres
+      version: latest
+    metadata:
+      namespace: *namespace
+    containerPort: 5432
+    spec:
+      typeport: NodePort
+    env:
+    - name: POSTGRES_USER
+      valueFrom:
+        secretKeyRef:
+          name: microskill-secret
+          key: postgresUser
+    - name: POSTGRES_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: microskill-secret
+          key: postgresPassword
+    - name: POSTGRES_DB
+      valueFrom:
+        configMapKeyRef:
+          name: microskill-config
+          key: db-url
+    service:
+      port: 5432
+      targetPort: 5432
+  microskillapp:
+    kind: Deployment
+    replicas: 3
+    appName: testcontainers2024
+    containers:
+      name: testcontainers2024
+      image: alexbartenev/testcontainers2024
+      version: latest
+    metadata:
+      namespace: *namespace
+    containerPort: 8080
+    spec:
+      typeport: NodePort
+    env:
+    - name: SPRING_DATASOURCE_USERNAME
+      valueFrom:
+        secretKeyRef:
+          name: microskill-secret
+          key: postgresUser
+    - name: SPRING_DATASOURCE_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: microskill-secret
+          key: postgresPassword
+    - name: POSTGRES_DB
+      valueFrom:
+        configMapKeyRef:
+          name: microskill-config
+          key: db-url
+    - name: SPRING_DATASOURCE_URL
+      valueFrom:
+        configMapKeyRef:
+          name: microskill-config
+          key: spring-data-url
+    service:
+      port: 8080
+      targetPort: 8080
+
